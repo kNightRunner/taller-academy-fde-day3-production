@@ -1,0 +1,65 @@
+name: Day 3 real-model laboratory evidence
+on:
+  push:
+    paths:
+      - '.github/workflows/live_model_lab.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: day3-evidence-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run deterministic safety tests
+        run: |
+          python -m unittest discover -s tests -v
+          python test_guardrails.py
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in {1..45}; do
+            if curl -fsS http://localhost:11434/api/tags >/dev/null; then break; fi
+            sleep 2
+          done
+          curl -fsS http://localhost:11434/api/tags
+      - name: Download model
+        run: ollama pull qwen2.5:3b
+      - name: Run production experiments
+        env:
+          FDE_PROVIDER: ollama
+          FDE_MODEL: qwen2.5:3b
+        run: python -u run_experiments.py --full
+      - name: Complete written evidence
+        run: python -u finalize_submission.py
+      - name: Publish evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add SUBMISSION.md
+          git add -f results/experiments.json results/EVIDENCE.md
+          if git diff --cached --quiet; then
+            echo 'No evidence to commit'
+          else
+            git commit -m 'docs(day3): record observed model traces and evaluations'
+            git push origin HEAD:main
+          fi
+      - name: Upload evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: day3-model-evidence
+          path: |
+            results/experiments.json
+            results/EVIDENCE.md
+          if-no-files-found: ignore
