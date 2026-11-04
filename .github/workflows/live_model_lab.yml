@@ -1,3 +1,4 @@
+# Day 3 measured run after offline safety checks passed.
 name: Day 3 real-model laboratory evidence
 on:
   push:
