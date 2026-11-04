@@ -89,8 +89,8 @@ def check_outcome(case, trace):
     # Reject a known false positive: the right numerals attached to wrong concepts.
     if case.get("id") == "cheapest-vendor-total":
         import re
-        bad_consumption = re.search(r"(?:consumption|spend)\\s*(?:is|was|:|=)\\s*(?:usd\\s*)?312,?500", answer)
-        bad_total = re.search(r"(?:annual\\s+total|total\\s+annual\\s+cost|total\\s+cost)\\s*(?:is|was|:|=)\\s*(?:usd\\s*)?288,?500", answer)
+        bad_consumption = re.search(r"(?:consumption|spend)\s*(?:is|was|:|=)\s*(?:usd\s*)?312,?500", answer)
+        bad_total = re.search(r"(?:annual\s+total|total\s+annual\s+cost|total\s+cost)\s*(?:is|was|:|=)\s*(?:usd\s*)?288,?500", answer)
         results["amounts_correctly_assigned"] = not (bad_consumption or bad_total)
 
     passed = sum(results.values())
