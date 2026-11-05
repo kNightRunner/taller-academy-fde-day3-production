@@ -1,0 +1,52 @@
+{
+  "tokenizer": "o200k_base",
+  "method": "tiktoken.get_encoding(...).encode(text)",
+  "scope": "raw content only; excludes chat message wrappers, tool definitions, and provider overhead",
+  "rows": [
+    {
+      "content": "One-line prompt (actual request)",
+      "file": "samples/prompt.txt",
+      "characters": 43,
+      "predicted_tokens": 11,
+      "counted_tokens": 13,
+      "ratio_counted_predicted": 1.1818
+    },
+    {
+      "content": "English prose",
+      "file": "samples/english_paragraph.txt",
+      "characters": 398,
+      "predicted_tokens": 100,
+      "counted_tokens": 79,
+      "ratio_counted_predicted": 0.79
+    },
+    {
+      "content": "Spanish translation",
+      "file": "samples/spanish_paragraph.txt",
+      "characters": 483,
+      "predicted_tokens": 121,
+      "counted_tokens": 95,
+      "ratio_counted_predicted": 0.7851
+    },
+    {
+      "content": "201-line Python source",
+      "file": "samples/source_201_lines.py",
+      "characters": 8688,
+      "predicted_tokens": 2172,
+      "counted_tokens": 1853,
+      "ratio_counted_predicted": 0.8531
+    },
+    {
+      "content": "JSONL code/log record",
+      "file": "samples/log_comparable_size.jsonl",
+      "characters": 8604,
+      "predicted_tokens": 2151,
+      "counted_tokens": 2380,
+      "ratio_counted_predicted": 1.1065
+    }
+  ],
+  "questions": {
+    "largest_underestimate": "One-line prompt (actual request)",
+    "spanish_minus_english": 16,
+    "spanish_vs_english_percent": 20.25
+  }
+}
